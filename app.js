@@ -22,7 +22,7 @@ app.set("view engine", "pug");
 
 // inisialisasi variabel global teachablemachine
 async function init() {
-  const modelURL = "http://localhost:3000/model.json";
+  const modelURL = "http://localhost:5000/model.json";
   // load modul Teachable Machine menggunakan model.json
   let model = await tmImage.load(modelURL, {
     tfjsVersion: "1.3.1",
