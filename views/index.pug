@@ -1,0 +1,51 @@
+doctype html
+html
+    head
+        meta(name='viewport', content='width=device-width')
+        link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css")
+        script(src='https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js')
+        script(src='https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js')
+        title= subject
+    body
+        div.container.mt-2
+            section
+                h2 Tensorflow
+                div#webcam-container
+                div#result
+            script.
+                let webcam // untuk menyimpan variabel webcam 
+                async function init(){ //fungsi inisialisasi kamera
+                    webcam = new tmImage.Webcam(200,200, true); //pemanggilan method untuk inisialisasi kamera
+                    await webcam.setup(); // request akses ke webcam
+                    await webcam.play();
+                    document.getElementById("webcam-container").appendChild(webcam.canvas); // simpan kamera yang telah diinisialisasi ke element dengan ID webcam-container
+                    loop() // panggil fungsi loop()
+                }
+                init() //panggil fungsi init()
+
+                async function loop(){
+                    webcam.update(); // update camera
+
+                    // mulai request ke server untuk deteksi gambar dengan menggunakan kamera
+                    var httpPost = new XMLHttpRequest(),
+                        path = "/scan",
+                        data = JSON.stringify({image: webcam.canvas.toDataURL()});
+                    httpPost.onreadystatechange = function(err) {
+                            if (httpPost.readyState == 4 && httpPost.status == 200){
+                                let kata = "";
+                                let obj = JSON.parse(httpPost.responseText)
+                                obj.data.forEach(object => {
+                                    kata += "<span>"+object.className+"</span> : "+(Math.round(object.probability * 1000) / 1000)+"<br/>";
+                                })
+                                document.getElementById("result").innerHTML = kata; //cetak hasil di layar;
+                                window.requestAnimationFrame(loop); // panggil fungsi loop kembali
+                            } else {
+                                console.log(err);
+                            }
+                        };
+                    httpPost.open("POST", path, true); // metode request ke server dengan menggunakan method POST
+                    httpPost.setRequestHeader('Content-Type', 'application/json'); // tipe konten request ke server dengan menggunakan JSON
+                    httpPost.send(data); // kirim request ke server
+                }
+                
+            

@@ -1,0 +1,52 @@
+diff --git a/node_modules/@teachablemachine/image/dist/utils/canvas.js b/node_modules/@teachablemachine/image/dist/utils/canvas.js
+index 94bd4f6..ecf5d63 100644
+--- a/node_modules/@teachablemachine/image/dist/utils/canvas.js
++++ b/node_modules/@teachablemachine/image/dist/utils/canvas.js
+@@ -15,6 +15,9 @@
+  * limitations under the License.
+  * =============================================================================
+  */
++ const { createCanvas, loadImage } = require('canvas')
++
++
+ Object.defineProperty(exports, "__esModule", { value: true });
+ var newCanvas = function () { return document.createElement('canvas'); };
+ function resize(image, scale, canvas) {
+@@ -22,7 +25,10 @@ function resize(image, scale, canvas) {
+     canvas.width = image.width * scale;
+     canvas.height = image.height * scale;
+     var ctx = canvas.getContext('2d');
++    console.log("ahsdkshad");
+     ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
++    console.log(canvas);
++
+     return canvas;
+ }
+ exports.resize = resize;
+@@ -41,14 +47,12 @@ exports.resizeMinTo = resizeMinTo;
+ function cropTo(image, size, flipped, canvas) {
+     if (flipped === void 0) { flipped = false; }
+     if (canvas === void 0) { canvas = newCanvas(); }
++    canvas = createCanvas(200, 200)
+     // image image, bitmap, or canvas
+     var width = image.width;
+     var height = image.height;
+     // if video element
+-    if (image instanceof HTMLVideoElement) {
+-        width = image.videoWidth;
+-        height = image.videoHeight;
+-    }
++   
+     var min = Math.min(width, height);
+     var scale = size / min;
+     var scaledW = Math.ceil(width * scale);
+@@ -56,7 +60,8 @@ function cropTo(image, size, flipped, canvas) {
+     var dx = scaledW - size;
+     var dy = scaledH - size;
+     canvas.width = canvas.height = size;
+-    var ctx = canvas.getContext('2d');
++    let ctx = canvas.getContext('2d')
++    // var ctx = canvas.getContext('2d');
+     ctx.drawImage(image, ~~(dx / 2) * -1, ~~(dy / 2) * -1, scaledW, scaledH);
+     // canvas is already sized and cropped to center correctly
+     if (flipped) {

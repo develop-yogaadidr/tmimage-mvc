@@ -1,0 +1,7 @@
+1. Install NodeJS https://nodejs.org/en/download/
+2. Setelah selesai install, ekstrak folder ini
+3. Buka command prompt, arahkan ke folder yang sudah di ekstrak misal "D:/Project/Teachablemachine"
+4. Masukkan perintah "npm install"
+5. Masukkan perintah "npm i nodemon"
+6. Jalankan perintah "nodemon" pada command prompt 
+7. Buka browser, akses ke "http://localhost:3000"
